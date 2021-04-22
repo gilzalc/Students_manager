@@ -250,7 +250,7 @@ Student *partition (Student *start, Student *end)
 //  Student *pivot = getPivot (start,end);
   Student *pivot = end;
 //  swap (start,pivot);
-  Student *border = start - 1;
+  Student *border = start;
   for (int i = 0; i <= end - start; i++) //age
     {
       if ((((start + i))->_age) < (((pivot))->_age))
@@ -262,8 +262,6 @@ Student *partition (Student *start, Student *end)
 
 void quick_sort (Student *start, Student *end)
 {
-  if (end - start == (1))
-    return;
   if ((end - start) > 0)
     {
       Student *p = partition (start, end);
