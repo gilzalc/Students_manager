@@ -305,7 +305,7 @@ int main (int argc, char *argv[])
         }
       case BUBBLE_CHAR:
         {
-          bubble_sort (studs, studs + studs_num-1);
+          bubble_sort (studs, studs + studs_num);
           print_students (studs, studs_num);
           break;
         }
