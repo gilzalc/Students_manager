@@ -20,16 +20,16 @@
 #define QUICK "quick"
 #define BUBBLE "bubble"
 #define ARGS_ERR "Usage: <best|quick|bubble>\n"
-#define ARGS_ERR "Usage: <best|quick|bubble>\n"
 #define STUDENTS_NUM_REQUEST "Enter the number of students. Then enter\n"
 #define STUDENTS_INFO_REQUEST "Enter student info. Then enter\n"
 
-#define INVALID_STUDENTS_NUM "ERROR: Number should be a natural number"
-#define INVALID_ID "ERROR: ID should be in a format of 10 digits, which the\
-first digit is not 0"
-#define INVALID_AGE "ERROR: Age should be an integer between 18 and 120 (includes)"
+#define INVALID_STUDENTS_NUM "ERROR: Number should be a natural number\n"
+#define INVALID_ID "ERROR: ID should be in a format of 10 digits, when the \
+first digit is not a 0\n"
+#define INVALID_AGE "ERROR: Age should be an integer between 18 and 120 "\
+"(includes)\n"
 #define INVALID_GRADE "ERROR: Grade should be an integer between 0 and 100\
-(includes)"
+(includes)\n"
 
 typedef struct Student {
     long int _id;
@@ -82,8 +82,9 @@ long getStudentsNum ()
 
 int isValidId (const char *id)
 {
-  if (strlen (id) != ID_LEN || *id == 0) //check first char
-    return EXIT_FAILURE;
+ int len =  strlen(id);
+  if (len != ID_LEN || id[0] == '0') //check first char
+    return 0;
   return hasJustDigits (id);
 }
 int isValidRangedNum (const char *s, int minVal, int maxVal)
@@ -118,7 +119,7 @@ Student *getStudentsInfo (long stdNum)
       char input[MAX_LINE_LENGTH], age[MAX_VAR_LENGTH],
           grade[MAX_VAR_LENGTH], id[MAX_VAR_LENGTH];
       fgets (input, MAX_LINE_LENGTH, stdin);
-      if (sscanf (input, "%s,%s,%s", id, grade, age))
+      if (sscanf (input, "%[^,],%[^,],%s", id, grade, age))
         if (!isValidId (id))
           {
             fprintf (stdout, INVALID_ID);
@@ -144,16 +145,19 @@ Student *getStudentsInfo (long stdNum)
   return studentArr;
 }
 
-void best_student (Student *start, Student *end){
+void best_student (Student *start, Student *end)
+{
   float max = 0;
   Student *toReturn;
- for (int i = 0;i<end-start;i++){
-   if (start->_ageGradeQuotient>max){
-     max = (start->_ageGradeQuotient);
-     toReturn = start;
-   }
- }
-  printf ("best student info is: %ld,%d,%d",toReturn->_id,toReturn->_grade,
+  for (int i = 0; i < end - start; i++)
+    {
+      if (start[i]._ageGradeQuotient > max)
+        {
+          max = (start->_ageGradeQuotient);
+          toReturn = &start[i];
+        }
+    }
+  printf ("best student info is: %ld,%d,%d\n", toReturn->_id, toReturn->_grade,
           toReturn->_age);
 }
 /**
@@ -168,18 +172,57 @@ void swap (Student *xp, Student *yp)
   *yp = temp;
 }
 
-//void bubble_sort (Student *start, Student *end){
-//  int i, j;
-//  long n = end-start;
-//  for (i = 0; i < n-1; i++)
-//    // Last i elements are already in place
-//    for (j = 0; j < n-i-1; j++)
-//      if (arr[j] > arr[j+1])
-//        swap(&arr[j], &arr[j+1]);
-
+void bubbleSort (Student *start, Student *end)
+{
+  int i, j;
+  long n = end - start;
+  for (i = 0; i < n - 1; i++)
+    {
+      for (j = 0; j < n - i - 1; j++)
+        {
+          if ((((start + j))->_grade) > (((start + j + 1))->_grade))
+            swap ((start + j), (start + j + 1));
+        }
+    }
 }
-void quick_sort (Student *start, Student *end);
-Student *partition (Student *start, Student *end);
+
+void printStudents (Student *students, long totalNum)
+{
+  for (int i = 0; i < totalNum; ++i)
+    {
+      printf ("%lu,%d,%d\n",
+               students[i]._id,
+               students[i]._grade,
+               students[i]._age);
+    }
+}
+
+
+
+
+Student *partition (Student *start, Student *end){
+//  Student *pivot = getPivot (start,end);
+Student *pivot = end;
+//  swap (start,pivot);
+  Student *border = start-1;
+  for (int i = 0; i <=end-start ; i++) //age
+    {
+      if ((((start + i))->_age) < (((pivot))->_age))
+        swap (start+i,++border);
+    }
+  swap (border+1,end);
+  return border+1;
+}
+
+void quickSort (Student *start, Student *end)
+{
+  if ((end - start) > 0)
+    {
+      Student *p = partition (start, end);
+      quickSort (start, p - 1);
+      quickSort (p + 1, end);
+    }
+}
 
 int main (int argc, char *argv[])
 {
@@ -210,17 +253,32 @@ int main (int argc, char *argv[])
     {
       case BEST_CHAR:
         {
-          best_student (studs, studs + ((sizeof (Student) * studsNum)));
-          free (studs);
-          return EXIT_SUCCESS;
+          best_student (studs, studs + studsNum);
+          break;
+        }
+      case BUBBLE_CHAR:
+        {
+          bubbleSort (studs, studs + studsNum);
+          printStudents (studs, studsNum);
+          break;
         }
       case QUICK_CHAR:
-        break;
-      case BUBBLE_CHAR:
-        break;
+        {
+          quickSort (studs, studs + studsNum);
+          printStudents (studs, studsNum);
+          break;
+        }
       default:
-        break;
+        return EXIT_FAILURE;
     }
+  free (studs);
   return EXIT_SUCCESS;
 }
 
+
+//Student *getPivot(Student *start,Student *end){
+//  long length =end-start;
+//  Student *pivot;
+//  pivot = (start+(random()%(length-1)));
+//  return pivot;
+//}
