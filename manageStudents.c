@@ -20,7 +20,7 @@
 #define QUICK "quick"
 #define BUBBLE "bubble"
 #define ARGS_ERR "Usage: <best|quick|bubble>\n"
-#define STUDENTS_NUM_REQUEST "Enter the number of students. Then enter\n"
+#define STUDENTS_NUM_REQUEST "Enter number of students. Then enter\n"
 #define STUDENTS_INFO_REQUEST "Enter student info. Then enter\n"
 
 #define INVALID_STUDENTS_NUM "ERROR: Number should be a natural number\n"
@@ -45,7 +45,7 @@ typedef struct Student {
 int has_just_digits (const char *string)
 {
 
-  for (int i = 0; i < (int) strlen(string); i++)
+  for (int i = 0; i < (int) strlen (string); i++)
     {
       if (!isdigit(string[i]))
         return 0;
@@ -64,7 +64,7 @@ long get_students_num ()
       fgets (input, MAX_LINE_LENGTH, stdin);
       sscanf (input, "%s", stud_num_string);
       // Check if only digits and if positive
-      if (!has_just_digits(stud_num_string))
+      if (!has_just_digits (stud_num_string))
         {
           fprintf (stdout, INVALID_STUDENTS_NUM);
           continue;
@@ -82,14 +82,14 @@ long get_students_num ()
 
 int is_valid_id (const char *id)
 {
- int len =  (int) strlen(id);
+  int len = (int) strlen (id);
   if (len != ID_LEN || id[0] == '0') //check first char
     return 0;
-  return has_just_digits(id);
+  return has_just_digits (id);
 }
 int is_valid_ranged (const char *s, int minVal, int maxVal)
 {
-  if (has_just_digits(s) == 0)
+  if (has_just_digits (s) == 0)
     return 0;
   long n_grade = strtol (s, NULL, DECIMAL);
   if (n_grade <= maxVal && n_grade >= minVal)
@@ -99,15 +99,15 @@ int is_valid_ranged (const char *s, int minVal, int maxVal)
 
 int is_valid_grade (const char *grade)
 {
-  return is_valid_ranged(grade, MIN_GRADE, MAX_GRADE);
+  return is_valid_ranged (grade, MIN_GRADE, MAX_GRADE);
 }
 
 int is_valid_age (const char *age)
 {
-  return is_valid_ranged(age, MIN_AGE, MAX_AGE);
+  return is_valid_ranged (age, MIN_AGE, MAX_AGE);
 }
 
-Student* get_students_info (long stdNum)
+Student *get_students_info (long stdNum)
 {
   Student *student_arr = malloc (stdNum * sizeof (Student));
   if (student_arr == NULL)
@@ -120,17 +120,17 @@ Student* get_students_info (long stdNum)
           grade[MAX_VAR_LENGTH], id[MAX_VAR_LENGTH];
       fgets (input, MAX_LINE_LENGTH, stdin);
       if (sscanf (input, "%[^,],%[^,],%s", id, grade, age))
-        if (!is_valid_id(id))
+        if (!is_valid_id (id))
           {
             fprintf (stdout, INVALID_ID);
             continue;
           }
-      if (!is_valid_grade(grade))
+      if (!is_valid_grade (grade))
         {
           fprintf (stdout, INVALID_GRADE);
           continue;
         }
-      if (!is_valid_age(age))
+      if (!is_valid_age (age))
         {
           fprintf (stdout, INVALID_AGE);
           continue;
@@ -157,8 +157,8 @@ void best_student (Student *start, Student *end)
           to_return = &start[i];
         }
     }
-  printf ("best student info is: %ld,%d,%d\n", to_return->_id, to_return->_grade,
-          to_return->_age);
+  printf ("best student info is: %ld,%d,%d\n",
+          to_return->_id, to_return->_grade, to_return->_age);
 }
 /**
  * Swaps two Students
@@ -191,27 +191,25 @@ void print_students (Student *students, long totalNum)
   for (int i = 0; i < totalNum; ++i)
     {
       printf ("%lu,%d,%d\n",
-               students[i]._id,
-               students[i]._grade,
-               students[i]._age);
+              students[i]._id,
+              students[i]._grade,
+              students[i]._age);
     }
 }
 
-
-
-
-Student *partition (Student *start, Student *end){
+Student *partition (Student *start, Student *end)
+{
 //  Student *pivot = getPivot (start,end);
-Student *pivot = end;
+  Student *pivot = end;
 //  swap (start,pivot);
-  Student *border = start-1;
-  for (int i = 0; i <=end-start ; i++) //age
+  Student *border = start - 1;
+  for (int i = 0; i <= end - start; i++) //age
     {
       if ((((start + i))->_age) < (((pivot))->_age))
-        swap (start+i,++border);
+        swap (start + i, ++border);
     }
-  swap (border+1,end);
-  return border+1;
+  swap (border + 1, end);
+  return border + 1;
 }
 
 void quick_sort (Student *start, Student *end)
@@ -219,8 +217,8 @@ void quick_sort (Student *start, Student *end)
   if ((end - start) > 0)
     {
       Student *p = partition (start, end);
-      quick_sort(start, p - 1);
-      quick_sort(p + 1, end);
+      quick_sort (start, p - 1);
+      quick_sort (p + 1, end);
     }
 }
 
@@ -246,9 +244,9 @@ int main (int argc, char *argv[])
     }
 
   long studs_num = 0;
-  studs_num = get_students_num(); //num of students
+  studs_num = get_students_num (); //num of students
   Student *studs;
-  studs = get_students_info(studs_num);
+  studs = get_students_info (studs_num);
   switch (check)
     {
       case BEST_CHAR:
@@ -259,12 +257,12 @@ int main (int argc, char *argv[])
       case BUBBLE_CHAR:
         {
           bubble_sort (studs, studs + studs_num);
-          print_students(studs, studs_num);
+          print_students (studs, studs_num);
           break;
         }
       case QUICK_CHAR:
         {
-          quick_sort(studs, studs + studs_num);
+          quick_sort (studs, studs + studs_num);
           print_students (studs, studs_num);
           break;
         }
