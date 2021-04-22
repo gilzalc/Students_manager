@@ -247,20 +247,19 @@ void print_students (Student *students, long totalNum)
 
 Student *partition (Student *start, Student *end)
 {
-  Student *border = start - 1;
   Student *pivot = end;
-  Student *s = start;
-  for (;s < end; s++) //age
+  Student *border = start-1;
+  for (int i = 0; i <= (end - start-1); i++) //age
     {
-      if ((start)->_age < (pivot)->_age)
-        {
+      if ((start + i)->_age < (pivot)->_age){
           border++;
-          swap (border, s);
+          swap (border,start + i);
         }
     }
   swap (border + 1, end);
   return border + 1;
 }
+
 
 void quick_sort (Student *start, Student *end)
 {
@@ -301,18 +300,18 @@ int main (int argc, char *argv[])
     {
       case BEST_CHAR:
         {
-          best_student (studs, studs + studs_num);
+          best_student (studs, studs + studs_num-1);
           break;
         }
       case BUBBLE_CHAR:
         {
-          bubble_sort (studs, studs + studs_num);
+          bubble_sort (studs, studs + studs_num-1);
           print_students (studs, studs_num);
           break;
         }
       case QUICK_CHAR:
         {
-          quick_sort (studs, studs + studs_num);
+          quick_sort (studs, studs + studs_num-1);
           print_students (studs, studs_num);
           break;
         }
@@ -323,17 +322,3 @@ int main (int argc, char *argv[])
   return EXIT_SUCCESS;
 }
 
-//Student *partition (Student *start, Student *end)
-//{
-//  Student *pivot = end;
-//  Student *border = start-1;
-//  for (int i = 0; i < (end - start); i++) //age
-//    {
-//      if ((start + i)->_age < (pivot)->_age){
-//          border++;
-//          swap (border,start + i);
-//        }
-//    }
-//  swap (border + 1, end);
-//  return border + 1;
-//}
