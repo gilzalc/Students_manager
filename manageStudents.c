@@ -91,7 +91,7 @@ int is_valid_ranged (const char *s, int minVal, int maxVal)
 {
   if (has_just_digits(s) == 0)
     return 0;
-  long n_grade = strtol (s, NULL, DEcomCIMAL);
+  long n_grade = strtol (s, NULL, DECIMAL);
   if (n_grade <= maxVal && n_grade >= minVal)
     return 1;
   return 0;
