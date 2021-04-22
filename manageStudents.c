@@ -13,13 +13,16 @@
 #define MAX_AGE 120
 #define MIN_GRADE 0
 #define MAX_GRADE 100
+
 #define BUBBLE_CHAR 's'
 #define QUICK_CHAR 'q'
 #define BEST_CHAR 'b'
 #define BEST "best"
 #define QUICK "quick"
 #define BUBBLE "bubble"
+
 #define ARGS_ERR "Usage: <best|quick|bubble>\n"
+
 #define STUDENTS_NUM_REQUEST "Enter number of students. Then enter\n"
 #define STUDENTS_INFO_REQUEST "Enter student info. Then enter\n"
 
@@ -31,6 +34,9 @@ first digit is not a 0\n"
 #define INVALID_GRADE "ERROR: Grade should be an integer between 0 and 100\
 (includes)\n"
 
+/**
+ * @brief represents a student of the hebrew university of jerusalem
+ */
 typedef struct Student {
     long int _id;
     int _grade, _age;
@@ -38,9 +44,9 @@ typedef struct Student {
 } Student;
 
 /**
- * this function checks if s consists of digits only.
- * @param s - string to be checked.
- * @return 1 upon success, 0 for failure.
+ * this function checks if a string is composed by merely digits chars.
+ * @param string to be checked.
+ * @return 1 if it has only digits ,0 o.w
  */
 int has_just_digits (const char *string)
 {
@@ -52,7 +58,10 @@ int has_just_digits (const char *string)
     }
   return 1;
 }
-
+/**
+ * @brief gets the number of students in the university from the user
+ * @return number of students
+ */
 long get_students_num ()
 {
   char stud_num_string[MAX_LINE_LENGTH];
@@ -61,10 +70,10 @@ long get_students_num ()
     {
       printf (STUDENTS_NUM_REQUEST);
       char input[MAX_LINE_LENGTH];
-      if (fgets (input, MAX_LINE_LENGTH, stdin)==NULL)
-        continue;
-      if (sscanf (input, "%s", stud_num_string)!=1)
-        continue;
+      if (fgets (input, MAX_LINE_LENGTH, stdin) == NULL)
+        exit (EXIT_FAILURE);
+      if (sscanf (input, "%s", stud_num_string) != 1)
+        exit (EXIT_FAILURE);
       // Check if only digits and if positive
       if (!has_just_digits (stud_num_string))
         {
@@ -81,7 +90,11 @@ long get_students_num ()
     }
   return std_num;
 }
-
+/**
+ * @brief checks if a given string is a valid id
+ * @param id string to check
+ * @return 1 if valid,0 o.w
+ */
 int is_valid_id (const char *id)
 {
   int len = (int) strlen (id);
@@ -89,6 +102,14 @@ int is_valid_id (const char *id)
     return 0;
   return has_just_digits (id);
 }
+/**
+ * @brief checks if a string is a number, and a positive one, within a valid
+ * range
+ * @param s string to check
+ * @param minVal - minimal value
+ * @param maxVal maximal value
+ * @return
+ */
 int is_valid_ranged (const char *s, int minVal, int maxVal)
 {
   if (has_just_digits (s) == 0)
@@ -98,17 +119,27 @@ int is_valid_ranged (const char *s, int minVal, int maxVal)
     return 1;
   return 0;
 }
-
+/**
+ * @brief checks if a given string is a valid grade
+ * @param grade string to check
+ * @return 1 if valid,0 o.w
+ */
 int is_valid_grade (const char *grade)
 {
   return is_valid_ranged (grade, MIN_GRADE, MAX_GRADE);
 }
-
+/**
+ * @brief checks if a given string is a valid age
+ * @param age string to check
+ * @return 1 if valid,0 o.w
+ */
 int is_valid_age (const char *age)
 {
   return is_valid_ranged (age, MIN_AGE, MAX_AGE);
 }
-
+/*
+ * function that gets the information about the students of the school
+ */
 Student *get_students_info (long stdNum)
 {
   Student *student_arr = malloc (stdNum * sizeof (Student));
@@ -121,9 +152,9 @@ Student *get_students_info (long stdNum)
       char input[MAX_LINE_LENGTH], age[MAX_VAR_LENGTH],
           grade[MAX_VAR_LENGTH], id[MAX_VAR_LENGTH];
       if (fgets (input, MAX_LINE_LENGTH, stdin) == NULL)
-        continue;
+        exit (EXIT_FAILURE);
       if (sscanf (input, "%[^,],%[^,],%s", id, grade, age) != 3)
-        continue;
+        exit (EXIT_FAILURE);
       if (!is_valid_id (id))
         {
           fprintf (stdout, INVALID_ID);
@@ -148,7 +179,11 @@ Student *get_students_info (long stdNum)
     }
   return student_arr;
 }
-
+/**
+ * @brief returns the student with the best age/grade ratio
+ * @param start pointer to the beginning of the array
+ * @param end pointer to the end of the array
+ */
 void best_student (Student *start, Student *end)
 {
   float max = 0;
@@ -165,17 +200,22 @@ void best_student (Student *start, Student *end)
           to_return->_id, to_return->_grade, to_return->_age);
 }
 /**
- * Swaps two Students
- * @param xp first Student
- * @param yp Second student
+ * Swaps two Students in an array
+ * @param xp first Student (pointer)
+ * @param yp Second student (pointer)
  */
-void swap (Student *xp, Student *yp)
+void swap (Student *s1p, Student *s2p)
 {
-  Student temp = *xp;
-  *xp = *yp;
-  *yp = temp;
+  Student temp = *s1p;
+  *s1p = *s2p;
+  *s2p = temp;
 }
-
+/**
+ * @brief the old and famous bubble sort, with a twist - uses pointer
+ * arithmetics instead of classic indexing
+ * @param start pointer to the start of the arr
+ * @param end pointer to the end of the arr
+ */
 void bubble_sort (Student *start, Student *end)
 {
   int i, j;
@@ -189,7 +229,11 @@ void bubble_sort (Student *start, Student *end)
         }
     }
 }
-
+/**
+ * @brief prints the students array
+ * @param students students array
+ * @param totalNum length of array (num of students in the school)
+ */
 void print_students (Student *students, long totalNum)
 {
   for (int i = 0; i < totalNum; ++i)
@@ -276,11 +320,3 @@ int main (int argc, char *argv[])
   free (studs);
   return EXIT_SUCCESS;
 }
-
-
-//Student *getPivot(Student *start,Student *end){
-//  long length =end-start;
-//  Student *pivot;
-//  pivot = (start+(random()%(length-1)));
-//  return pivot;
-//}
