@@ -262,6 +262,8 @@ Student *partition (Student *start, Student *end)
 
 void quick_sort (Student *start, Student *end)
 {
+  if (end - start == (1))
+    return;
   if ((end - start) > 0)
     {
       Student *p = partition (start, end);
@@ -277,7 +279,7 @@ int main (int argc, char *argv[])
       fprintf (stdout, ARGS_ERR);
       return EXIT_FAILURE;
     }
-  char check = 0;
+  int check = 0;
   char *argument = argv[1]; //read only
   if (strcmp (argument, BEST) == 0)
     check = BEST_CHAR;
@@ -291,7 +293,7 @@ int main (int argc, char *argv[])
       return EXIT_FAILURE;
     }
 
-  long studs_num = 0;
+  long studs_num;
   studs_num = get_students_num (); //num of students
   Student *studs;
   studs = get_students_info (studs_num);
