@@ -300,7 +300,7 @@ int main (int argc, char *argv[])
     {
       case BEST_CHAR:
         {
-          best_student (studs, studs + studs_num-1);
+          best_student (studs, studs + studs_num);
           break;
         }
       case BUBBLE_CHAR:
