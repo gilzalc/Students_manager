@@ -61,8 +61,10 @@ long get_students_num ()
     {
       printf (STUDENTS_NUM_REQUEST);
       char input[MAX_LINE_LENGTH];
-      fgets (input, MAX_LINE_LENGTH, stdin);
-      sscanf (input, "%s", stud_num_string);
+      if (fgets (input, MAX_LINE_LENGTH, stdin)==NULL)
+        continue;
+      if (sscanf (input, "%s", stud_num_string)!=1)
+        continue;
       // Check if only digits and if positive
       if (!has_just_digits (stud_num_string))
         {
@@ -118,13 +120,15 @@ Student *get_students_info (long stdNum)
       printf (STUDENTS_INFO_REQUEST);
       char input[MAX_LINE_LENGTH], age[MAX_VAR_LENGTH],
           grade[MAX_VAR_LENGTH], id[MAX_VAR_LENGTH];
-      fgets (input, MAX_LINE_LENGTH, stdin);
-      if (sscanf (input, "%[^,],%[^,],%s", id, grade, age))
-        if (!is_valid_id (id))
-          {
-            fprintf (stdout, INVALID_ID);
-            continue;
-          }
+      if (fgets (input, MAX_LINE_LENGTH, stdin) == NULL)
+        continue;
+      if (sscanf (input, "%[^,],%[^,],%s", id, grade, age) != 3)
+        continue;
+      if (!is_valid_id (id))
+        {
+          fprintf (stdout, INVALID_ID);
+          continue;
+        }
       if (!is_valid_grade (grade))
         {
           fprintf (stdout, INVALID_GRADE);
