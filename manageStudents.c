@@ -62,8 +62,8 @@ long get_students_num ()
       printf (STUDENTS_NUM_REQUEST);
       char input[MAX_LINE_LENGTH];
       fgets (input, MAX_LINE_LENGTH, stdin);
-      sscanf (input, "%s", stud_num_string);// Check if only digits and if positive
-      //check validity:
+      sscanf (input, "%s", stud_num_string);
+      // Check if only digits and if positive
       if (!has_just_digits(stud_num_string))
         {
           fprintf (stdout, INVALID_STUDENTS_NUM);
@@ -245,27 +245,27 @@ int main (int argc, char *argv[])
       return EXIT_FAILURE;
     }
 
-  long studsNum = 0;
-  studsNum = get_students_num(); //num of students
+  long studs_num = 0;
+  studs_num = get_students_num(); //num of students
   Student *studs;
-  studs = get_students_info(studsNum);
+  studs = get_students_info(studs_num);
   switch (check)
     {
       case BEST_CHAR:
         {
-          best_student (studs, studs + studsNum);
+          best_student (studs, studs + studs_num);
           break;
         }
       case BUBBLE_CHAR:
         {
-          bubble_sort (studs, studs + studsNum);
-          print_students(studs, studsNum);
+          bubble_sort (studs, studs + studs_num);
+          print_students(studs, studs_num);
           break;
         }
       case QUICK_CHAR:
         {
-          quick_sort(studs, studs + studsNum);
-          print_students (studs, studsNum);
+          quick_sort(studs, studs + studs_num);
+          print_students (studs, studs_num);
           break;
         }
       default:
