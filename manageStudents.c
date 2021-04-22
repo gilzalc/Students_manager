@@ -247,14 +247,14 @@ void print_students (Student *students, long totalNum)
 
 Student *partition (Student *start, Student *end)
 {
-//  Student *pivot = getPivot (start,end);
   Student *pivot = end;
-//  swap (start,pivot);
-  Student *border = start;
-  for (int i = 0; i <= end - start; i++) //age
+  Student *border = start-1;
+  for (int i = 0; i < (end - start); i++) //age
     {
-      if ((((start + i))->_age) < (((pivot))->_age))
-        swap (start + i, ++border);
+      if ((start + i)->_age < (pivot)->_age){
+          border++;
+          swap (border,start + i);
+        }
     }
   swap (border + 1, end);
   return border + 1;
